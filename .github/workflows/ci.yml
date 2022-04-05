@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  rubocop:
+    name: Rubocop
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - '3.1.1'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run Rubocop
+        run: |
+          bin/rubocop --format github
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - '3.1.1'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run tests
+        run: |
+          bin/rake test
