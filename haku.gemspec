@@ -49,4 +49,9 @@ Gem::Specification.new do |spec|
   ## REQUIREMENTS
   #
   spec.required_ruby_version = ">= 2.6.0"
+
+  #
+  ## DEPENDENCIES
+  #
+  spec.add_dependency "activesupport", ">= 6.0", "< 8.0"
 end
