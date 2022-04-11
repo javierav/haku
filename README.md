@@ -2,6 +2,8 @@
 
 ![CI](https://github.com/javierav/haku/workflows/CI/badge.svg)
 
+A library for build simple service objects.
+
 TODO: Write a better gem description.
 
 ## Installation
