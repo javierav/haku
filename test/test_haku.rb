@@ -14,4 +14,16 @@ class TestHaku < Minitest::Test
   def test_controller_api_enabled
     assert Haku.enable_in_action_controller_api
   end
+
+  def test_configuration
+    current_event_model = Haku.event_model
+
+    Haku.configure do |config|
+      config.event_model = "TestEvent"
+    end
+
+    assert_equal "TestEvent", Haku.event_model
+
+    Haku.event_model = current_event_model
+  end
 end
