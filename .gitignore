@@ -3,5 +3,7 @@
 /_yardoc/
 /coverage/
 /doc/
+/gemfiles/*
+!/gemfiles/*.gemfile
 /tmp/
 /*.gem

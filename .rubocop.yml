@@ -12,6 +12,8 @@ AllCops:
   DisplayCopNames: true
   Exclude:
     - "**/bin/**/*"
+    - "**/gemfiles/**/*"
+    - "**/Appraisals"
   NewCops: enable
   TargetRubyVersion: 2.6
 
