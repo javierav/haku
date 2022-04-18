@@ -7,13 +7,15 @@ class TestController < Minitest::Test
   class ExampleService
     include Haku::Core
 
+    input :name, :current_user
+
     def call
       success! text: formated_text
     end
 
     def formated_text
       text = "Hello #{name}"
-      text << ", I'm #{current_user}" if respond_to?(:current_user)
+      text << ", I'm #{current_user}" if current_user.present?
       text
     end
   end

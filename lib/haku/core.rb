@@ -11,6 +11,7 @@ module Haku
     included do
       attr_reader :params
 
+      class_attribute :haku_inputs, default: []
       class_attribute :haku_success_callbacks, default: []
       class_attribute :haku_failure_callbacks, default: []
     end
@@ -18,6 +19,10 @@ module Haku
     module ClassMethods
       def call(params={})
         new(params).run
+      end
+
+      def input(*names)
+        self.haku_inputs += names
       end
 
       def on_success(*methods)
@@ -32,8 +37,8 @@ module Haku
     def initialize(params={})
       @params = params
 
-      @params.each_key do |key|
-        define_singleton_method(key) { @params[key] } unless respond_to?(key)
+      self.class.haku_inputs.each do |name|
+        define_singleton_method(name) { @params[name] } unless respond_to?(name)
       end
     end
 
