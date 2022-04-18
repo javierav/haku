@@ -14,9 +14,9 @@ class TestController < Minitest::Test
     end
 
     def formated_text
-      text = "Hello #{name}"
-      text << ", I'm #{current_user}" if current_user.present?
-      text
+      text = ["Hello #{name}"]
+      text << ", I'm #{current_user}" if current_user
+      text.join
     end
   end
 

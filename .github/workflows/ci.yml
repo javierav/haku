@@ -5,9 +5,12 @@ jobs:
     name: Rubocop
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         ruby:
-          - '3.1.1'
+          - '2.7'
+          - '3.0'
+          - '3.1'
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby ${{ matrix.ruby }}
@@ -22,9 +25,12 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         ruby:
-          - '3.1.1'
+          - '2.7'
+          - '3.0'
+          - '3.1'
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby ${{ matrix.ruby }}
@@ -32,6 +38,11 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+      - name: Install dependencies
+        run: bundle install
+      - name: Install Appraisal dependencies
+        run: bin/appraisal install
       - name: Run tests
-        run: |
-          bin/rake test
+        run: bin/rake test
+      - name: Run Appraisals
+        run: bin/appraisal rake test

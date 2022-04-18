@@ -57,6 +57,9 @@ module Haku
     def initialize(params={})
       @params = params
 
+      @_haku_status = :success
+      @_haku_response = {}
+
       self.class.haku_inputs.each do |name|
         define_singleton_method(name) { @params[name] } unless respond_to?(name)
       end
@@ -81,11 +84,11 @@ module Haku
     end
 
     def _haku_status
-      @_haku_status || :success
+      @_haku_status
     end
 
     def _haku_response
-      @_haku_response || {}
+      @_haku_response
     end
 
     def _haku_run_callbacks
