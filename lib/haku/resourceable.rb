@@ -36,5 +36,18 @@ module Haku
         end
       end
     end
+
+    def persist_resource(resource, **save_options)
+      resource.tap do
+        if resource.save(save_options)
+          yield resource if block_given?
+          success! resource: resource
+        else
+          failure! resource: resource, errors: resource.errors
+        end
+      end
+    end
+
+    alias save_resource persist_resource
   end
 end
