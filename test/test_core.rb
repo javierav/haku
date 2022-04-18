@@ -14,6 +14,8 @@ class TestCore < Minitest::Test
   class ParamsExample
     include Haku::Core
 
+    input :name
+
     def call
       "Hello #{name}!"
     end
@@ -21,6 +23,8 @@ class TestCore < Minitest::Test
 
   class MagicMethodsExample
     include Haku::Core
+
+    input :name
 
     def name
       "Javier"
