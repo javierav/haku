@@ -90,7 +90,7 @@ class TestCore < Minitest::Test
     mock.expect :call, true, []
 
     example.stub(:notify_success, mock) do
-      example.run
+      example.call
     end
 
     assert_mock mock
@@ -113,7 +113,7 @@ class TestCore < Minitest::Test
     mock.expect :call, true, []
 
     example.stub(:notify_failure, mock) do
-      example.run
+      example.call
     end
 
     assert_mock mock

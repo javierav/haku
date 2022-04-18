@@ -19,16 +19,3 @@ module Haku
     (chain[0...-1].map(&:singularize) + [chain.last]).join(":")
   }
 end
-
-module Groups
-  module Users
-    class Create
-      include Haku::Core
-      include Haku::Eventable
-
-      def call
-        instance_exec(&Haku.event_name)
-      end
-    end
-  end
-end

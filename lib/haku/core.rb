@@ -9,6 +9,8 @@ module Haku
     extend ActiveSupport::Concern
 
     included do
+      prepend Callable
+
       attr_reader :params
 
       class_attribute :haku_inputs, default: []
@@ -17,8 +19,16 @@ module Haku
     end
 
     module ClassMethods
+      def inherited(base)
+        super
+
+        base.class_eval do
+          prepend Callable
+        end
+      end
+
       def call(params={})
-        new(params).run
+        new(params).call
       end
 
       def input(*names)
@@ -34,19 +44,21 @@ module Haku
       end
     end
 
+    module Callable
+      def call
+        result = super
+
+        Result.new(_haku_status, _haku_response.merge(result: result)).tap do
+          _haku_run_callbacks
+        end
+      end
+    end
+
     def initialize(params={})
       @params = params
 
       self.class.haku_inputs.each do |name|
         define_singleton_method(name) { @params[name] } unless respond_to?(name)
-      end
-    end
-
-    def run
-      result = call
-
-      Result.new(_haku_status, _haku_response.merge(result: result)).tap do
-        _haku_run_callbacks
       end
     end
 
