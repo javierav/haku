@@ -18,4 +18,10 @@ module Haku
     chain = self.class.name.underscore.split("/")
     (chain[0...-1].map(&:singularize) + [chain.last]).join(":")
   }
+
+  class << self
+    def configure
+      yield self
+    end
+  end
 end
