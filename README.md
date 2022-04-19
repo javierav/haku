@@ -109,7 +109,7 @@ class Users::Update
   include Haku::Eventable
 
   input :user, :attributes
-  has_event resource: :user
+  event resource: :user
 
   def call
     update_resource(user, attributes)
