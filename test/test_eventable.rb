@@ -13,7 +13,7 @@ class TestEventable < Minitest::Test
     include Haku::Core
     include Haku::Eventable
 
-    has_event
+    event
 
     def call
       success! text: "Basic Example"
@@ -24,7 +24,7 @@ class TestEventable < Minitest::Test
     include Haku::Core
     include Haku::Eventable
 
-    has_event on: :failure, actor: :user, target: -> { event_target }, name: "advanced_example"
+    event on: :failure, actor: :user, target: -> { event_target }, name: "advanced_example"
 
     def call
       failure! text: "Advanced Example"

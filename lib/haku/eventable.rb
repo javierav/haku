@@ -16,7 +16,7 @@ module Haku
     end
 
     module ClassMethods
-      def has_event(options={}) # rubocop:disable Naming/PredicateName
+      def event(options={})
         on = options.delete(:on)&.to_sym || :success
 
         send("haku_#{on}_events=", send("haku_#{on}_events") + [options])
