@@ -232,4 +232,4 @@ follow the [code of conduct](https://github.com/javierav/haku/blob/development/C
 
 ## License
 
-Copyright © 2022 Javier Aranda. Released under the terms of the [MIT license](LICENSE.txt).
+Copyright © 2022 Javier Aranda. Released under the terms of the [MIT license](LICENSE).
