@@ -1,4 +1,5 @@
 ## [Unreleased]
+- Fix accessors creation
 
 ## [1.2.1] - 2022-04-20
 - Fix accessors creation when result is plain array
