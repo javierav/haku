@@ -10,8 +10,12 @@ module Haku
 
       return unless @payload.respond_to?(:to_h)
 
-      @payload.to_h.each_key do |key|
-        define_singleton_method(key) { @payload[key] }
+      begin
+        @payload.to_h.each_key do |key|
+          define_singleton_method(key) { @payload[key] }
+        end
+      rescue StandardError
+        # no create accessors
       end
     end
 
