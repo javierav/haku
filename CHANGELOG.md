@@ -1,4 +1,6 @@
 ## [Unreleased]
+
+## [1.2.0] - 2022-04-20
 - Refactor how response is created on finish
 
 ## [1.1.0] - 2022-04-19
