@@ -80,7 +80,7 @@ class TestCore < Minitest::Test
     refute_predicate result, :failure?
 
     assert_equal "Javier", result.name
-    assert_nil result.result
+    assert_equal({ name: "Javier" }, result.result)
   end
 
   def test_success_callback
@@ -103,7 +103,7 @@ class TestCore < Minitest::Test
     refute_predicate result, :success?
 
     assert_equal "Pedro", result.name
-    assert_nil result.result
+    assert_equal({ name: "Pedro" }, result.result)
   end
 
   def test_failure_callback

@@ -1,4 +1,5 @@
 ## [Unreleased]
+- Refactor how response is created on finish
 
 ## [1.1.0] - 2022-04-19
 - Allow to configure Haku using block

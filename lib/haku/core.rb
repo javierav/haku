@@ -44,21 +44,23 @@ module Haku
       end
     end
 
+    Finish = Struct.new("Finish", :status, :payload)
+
     module Callable
       def call
-        result = super
+        response = catch(:finish) { super }
 
-        Result.new(_haku_status, _haku_response.merge(result: result)).tap do
-          _haku_run_callbacks
+        status = response.is_a?(Finish) ? response.status : :success
+        payload = response.is_a?(Finish) ? response.payload : response
+
+        Result.new(status, payload).tap do
+          _haku_run_callbacks(status)
         end
       end
     end
 
     def initialize(params={})
       @params = params
-
-      @_haku_status = :success
-      @_haku_response = {}
 
       self.class.haku_inputs.each do |name|
         define_singleton_method(name) { @params[name] } unless respond_to?(name)
@@ -67,32 +69,16 @@ module Haku
 
     private
 
-    def success!(response={})
-      @_haku_status = :success
-      @_haku_response = _haku_normalize_response(response)
-      nil
+    def success!(data=nil)
+      throw :finish, Finish.new(:success, data)
     end
 
-    def failure!(response={})
-      @_haku_status = :failure
-      @_haku_response = _haku_normalize_response(response)
-      nil
+    def failure!(data=nil)
+      throw :finish, Finish.new(:failure, data)
     end
 
-    def _haku_normalize_response(response)
-      response.is_a?(Hash) ? response : { data: response }
-    end
-
-    def _haku_status
-      @_haku_status
-    end
-
-    def _haku_response
-      @_haku_response
-    end
-
-    def _haku_run_callbacks
-      (self.class.send("haku_#{_haku_status}_callbacks") || []).each { |cb| send(cb) }
+    def _haku_run_callbacks(status)
+      (self.class.send("haku_#{status}_callbacks") || []).each { |cb| send(cb) }
     end
   end
 end

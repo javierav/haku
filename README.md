@@ -47,6 +47,7 @@ end
 response = Users::Update.call(user: User.first, attributes: { name: "Javier" })
 
 response.success? # => true
+response.result # => { resource: <User id="1" ...> }
 response.resource # => <User id="1" ...>
 ````
 
