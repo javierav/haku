@@ -1,4 +1,6 @@
 ## [Unreleased]
+
+## [1.2.1] - 2022-04-20
 - Fix accessors creation when result is plain array
 
 ## [1.2.0] - 2022-04-20
