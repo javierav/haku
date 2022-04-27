@@ -18,5 +18,11 @@ module Haku
     def default_execute_params
       { current_user: current_user } if respond_to?(:current_user)
     end
+
+    def virtual_execute(operation, params={})
+      @execution = VirtualExecution.call(
+        operation: operation, params: params.reverse_merge(default_execute_params || {})
+      )
+    end
   end
 end
