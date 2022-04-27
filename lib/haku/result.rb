@@ -8,14 +8,10 @@ module Haku
       @status = ActiveSupport::StringInquirer.new(status.to_s)
       @payload = payload
 
-      return unless @payload.respond_to?(:to_h)
+      return unless @payload.is_a?(Hash)
 
-      begin
-        @payload.to_h.each_key do |key|
-          define_singleton_method(key) { @payload[key] }
-        end
-      rescue StandardError
-        # no create accessors
+      @payload.each_key do |key|
+        define_singleton_method(key) { @payload[key] }
       end
     end
 
