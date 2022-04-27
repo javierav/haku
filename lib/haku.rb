@@ -2,6 +2,7 @@
 
 require "active_support/core_ext/module/attribute_accessors"
 require "active_support/core_ext/string/inflections"
+require_relative "haku/controller"
 require_relative "haku/core"
 require_relative "haku/eventable"
 require_relative "haku/resourceable"

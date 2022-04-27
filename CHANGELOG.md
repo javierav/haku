@@ -1,4 +1,5 @@
 ## [Unreleased]
+- Fix Haku::Controller
 
 ## [1.3.0] - 2022-04-27
 - Fix accessors creation
