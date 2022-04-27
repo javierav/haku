@@ -1,5 +1,6 @@
 ## [Unreleased]
 - Fix accessors creation
+- **Breaking**: Remove Rails railtie. Use `include Haku::Controller` in controllers instead.
 
 ## [1.2.1] - 2022-04-20
 - Fix accessors creation when result is plain array
