@@ -14,6 +14,7 @@ module Haku
       attr_reader :params
 
       class_attribute :haku_inputs, default: []
+      class_attribute :haku_before_call_callbacks, default: []
       class_attribute :haku_success_callbacks, default: []
       class_attribute :haku_failure_callbacks, default: []
     end
@@ -35,6 +36,10 @@ module Haku
         self.haku_inputs += names
       end
 
+      def before_call(*methods)
+        self.haku_before_call_callbacks += methods
+      end
+
       def on_success(*methods)
         self.haku_success_callbacks += methods
       end
@@ -48,13 +53,16 @@ module Haku
 
     module Callable
       def call
-        response = catch(:finish) { super }
+        response = catch(:finish) do
+          (self.class.send(:haku_before_call_callbacks) || []).each { |cb| send(cb) }
+          super
+        end
 
         status = response.is_a?(Finish) ? response.status : :success
         payload = response.is_a?(Finish) ? response.payload : response
 
         Result.new(status, payload).tap do
-          _haku_run_callbacks(status)
+          haku_run_callbacks(status)
         end
       end
     end
@@ -77,7 +85,7 @@ module Haku
       throw :finish, Finish.new(:failure, data)
     end
 
-    def _haku_run_callbacks(status)
+    def haku_run_callbacks(status)
       (self.class.send("haku_#{status}_callbacks") || []).each { |cb| send(cb) }
     end
   end

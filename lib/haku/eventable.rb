@@ -47,7 +47,11 @@ module Haku
 
     def haku_event_data_base(data)
       Haku.event_properties.each do |property|
-        data[property] = send(property) if respond_to?(property)
+        if respond_to?("event_#{property}", true)
+          data[property] = send("event_#{property}")
+        elsif respond_to?(property, true)
+          data[property] = send(property)
+        end
       end
     end
 
@@ -55,13 +59,17 @@ module Haku
       if value.respond_to?(:call)
         instance_exec(&value)
       else
-        value.is_a?(Symbol) ? send(value) : value
+        value.is_a?(Symbol) ? haku_process_symbol_value(value) : value
       end
+    end
+
+    def haku_process_symbol_value(value)
+      instance_variable_get("@#{value}") || send(value)
     end
 
     def haku_event_data_name(data, evt)
       key = Haku.event_property_for_name.to_sym
-      data[key] = evt[key] || haku_process_value(Haku.event_name)
+      data[key] = haku_process_value(evt[key] || Haku.event_name)
     end
 
     def haku_event_data_values(data, evt)

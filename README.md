@@ -156,7 +156,7 @@ end
 | `event_model`                      | Name of the model used for create events               | `Event`                                                  |
 | `event_properties`                 | List of attributes passed from service to event model  | `%i[actor resource target context]`                      |
 | `event_property_for_name`          | Property used for name in event model                  | `:name`                                                  |
-| `event_name`                       | String or Proc to determine the event name             | Custom Proc. Example: `user:created` for `Users::Create` |
+| `event_name`                       | String or Proc to determine the event name             | Custom Proc. Example: `user:create` for `Users::Create` |
 
 
 ## Resourceable
