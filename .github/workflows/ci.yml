@@ -42,7 +42,5 @@ jobs:
         run: bundle install
       - name: Install Appraisal dependencies
         run: bin/appraisal install
-      - name: Run tests
-        run: bin/rake test
       - name: Run Appraisals
         run: bin/appraisal rake test

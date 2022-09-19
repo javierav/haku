@@ -15,10 +15,28 @@ AllCops:
     - "**/gemfiles/**/*"
     - "**/Appraisals"
   NewCops: enable
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
 
 Layout/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: no_space
+
+Metrics/ClassLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+
+Metrics/MethodLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+
+Metrics/ModuleLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
 
 Style/Documentation:
   Enabled: false

@@ -24,22 +24,44 @@ class TestEventable < Minitest::Test
     include Haku::Core
     include Haku::Eventable
 
-    event on: :failure, actor: :user, target: -> { event_target }, name: "advanced_example"
+    event on: :failure, other: "Class Method", signature: -> { compute_signature }, enabled: true, color: :color,
+          name: "advanced_example"
 
     def call
+      @event_actor = "Event Instance Variable Actor"
+      @actor = "Instance Variable Actor"
+      @resource = "Instance Variable Resource"
+      @target = "Instance Variable Target"
+
       failure! text: "Advanced Example"
     end
 
+    def event_actor
+      "Event Method Actor"
+    end
+
+    def event_resource
+      "Event Method Resource"
+    end
+
     def resource
-      "Resource"
+      "Method Resource"
     end
 
-    def event_target
-      "Target"
+    def target
+      "Method Target"
     end
 
-    def user
-      "User"
+    def context
+      "Method Context"
+    end
+
+    def compute_signature
+      "Signature"
+    end
+
+    def color
+      :red
     end
   end
 
@@ -64,9 +86,20 @@ class TestEventable < Minitest::Test
   def test_advanced_example
     mock = Minitest::Mock.new
 
+    conditions = {
+      name: "advanced_example",
+      actor: "Event Instance Variable Actor",
+      resource: "Event Method Resource",
+      target: "Instance Variable Target",
+      context: "Method Context",
+      other: "Class Method",
+      signature: "Signature",
+      enabled: true,
+      color: :red
+    }
+
     mock.expect :call, true do |params|
-      params[:name] == "advanced_example" && params[:actor] == "User" &&
-        params[:resource] == "Resource" && params[:target] == "Target"
+      params.all? { |key, _value| params[key] == conditions[key] }
     end
 
     TestEventable::Event.stub(:create, mock) do
