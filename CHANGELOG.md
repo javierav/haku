@@ -1,4 +1,6 @@
 ## [Unreleased]
+
+## [1.4.0] - 2022-09-19
 - Improve `Haku::Eventable` module to support more data sources for event properties
 - Add `Haku::Delayable` module to execute service object in background
 - Improve README
