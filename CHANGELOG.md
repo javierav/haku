@@ -1,4 +1,10 @@
 ## [Unreleased]
+- Improve `Haku::Eventable` module to support more data sources for event properties
+- Add `Haku::Delayable` module to execute service object in background
+- Improve README
+- **Breaking**: Require `activesupport` >= 6.1
+- **Breaking**: Require Ruby >= 2.7
+- Fix CI test invocation
 
 ## [1.3.1] - 2022-04-27
 - Fix Haku::Controller

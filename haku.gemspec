@@ -47,10 +47,10 @@ Gem::Specification.new do |spec|
   #
   ## REQUIREMENTS
   #
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 2.7.0"
 
   #
   ## DEPENDENCIES
   #
-  spec.add_dependency "activesupport", ">= 6.0", "< 8.0"
+  spec.add_dependency "activesupport", ">= 6.1", "< 8.0"
 end
