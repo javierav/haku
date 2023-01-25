@@ -4,6 +4,10 @@
 
 A library for build simple service objects.
 
+## Status
+
+> :warning: **This project is still experimental, use with caution!**
+
 ## Installation
 
 Add this line to your application's Gemfile:
