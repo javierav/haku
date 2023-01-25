@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   #
   spec.name = "haku"
   spec.version = Haku.version
-  spec.summary = "A library for build simple service objects"
+  spec.summary = "A simple library for build simple service objects"
   spec.homepage = "https://github.com/javierav/haku"
   spec.license = "MIT"
 

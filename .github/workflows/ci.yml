@@ -40,7 +40,5 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install
-      - name: Install Appraisal dependencies
-        run: bin/appraisal install
-      - name: Run Appraisals
-        run: bin/appraisal rake test
+      - name: Run tests
+        run: bin/rake test

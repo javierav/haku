@@ -39,27 +39,8 @@ module Haku
 
     def haku_prepare_event_data(evt, data={})
       data.tap do
-        haku_event_data_base(data)
         haku_event_data_name(data, evt)
         haku_event_data_values(data, evt)
-      end
-    end
-
-    def haku_event_data_base(data)
-      Haku.event_properties.each do |property|
-        haku_event_data_base_value_for_property(data, property)
-      end
-    end
-
-    def haku_event_data_base_value_for_property(data, property)
-      if instance_variable_defined?("@event_#{property}")
-        data[property] = instance_variable_get("@event_#{property}")
-      elsif respond_to?("event_#{property}", true)
-        data[property] = send("event_#{property}")
-      elsif instance_variable_defined?("@#{property}")
-        data[property] = instance_variable_get("@#{property}")
-      elsif respond_to?(property, true)
-        data[property] = send(property)
       end
     end
 
@@ -78,12 +59,8 @@ module Haku
       if value.respond_to?(:call)
         instance_exec(&value)
       else
-        value.is_a?(Symbol) ? haku_process_symbol_value(value) : value
+        value.is_a?(Symbol) ? send(value) : value
       end
-    end
-
-    def haku_process_symbol_value(value)
-      instance_variable_defined?("@#{value}") ? instance_variable_get("@#{value}") : send(value)
     end
 
     def haku_create_event(data)

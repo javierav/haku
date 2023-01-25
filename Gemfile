@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "appraisal", github: "excid3/appraisal", branch: "fix-bundle-env"
+gem "activejob", ">= 6.1", "< 8.0"
 gem "minitest", "~> 5.0"
 gem "pry", "~> 0.14"
 gem "rake", "~> 13.0"

@@ -2,11 +2,13 @@
 
 ![CI](https://github.com/javierav/haku/workflows/CI/badge.svg)
 
-A library for build simple service objects.
+A simple library for build simple service objects.
+
 
 ## Status
 
 > :warning: **This project is still experimental, use with caution!**
+
 
 ## Installation
 
@@ -22,16 +24,18 @@ And then execute:
 bundle install
 ```
 
+
 ## Usage
 
 **Haku** is made up of four modules that add functionality to our service objects:
 
-* `Haku::Core`
-* `Haku::Delayable`
-* `Haku::Eventable`
-* `Haku::Resourceable`
+* [Haku::Core](#hakucore)
+* [Haku::Delayable](#hakudelayable)
+* [Haku::Eventable](#hakueventable)
+* [Haku::Resourceable](#hakuresourceable)
 
-Additionally, it's available the `Haku::Controller` module for use in ours Rails controllers.
+Additionally, it's available the [Haku::Controller](#hakucontroller) module for use in ours Rails controllers.
+
 
 ### Haku::Core
 
@@ -67,9 +71,8 @@ response.resource # => <User id="1" ...>
 As you can see, if the payload passed to `success!` or `failure!` is a hash, each key of the hash can be accessed
 directly in response object.
 
-### Haku::Delayable
 
-#### Basic example
+### Haku::Delayable
 
 ```ruby
 class Users::ComputeHours
@@ -103,10 +106,22 @@ Users::ComputeHours.delayed(job: OtherJob, queue: :low, priority: 2).call(user: 
 You can pass the same options allowed by ActiveJob
 [set](https://api.rubyonrails.org/v7.0.4/classes/ActiveJob/Core/ClassMethods.html#method-i-set) method:
 
+#### Config options
+
+```ruby
+# config/initializers/haku.rb
+
+Haku.configure do |config|
+  config.job_queue = "low_priority"
+end
+```
+
+| Config      | Description                      | Default value |
+|:------------|:---------------------------------|:--------------|
+| `job_queue` | String or Symbol with queue name | `default`     |
+
 
 ### Haku::Eventable
-
-#### Basic example
 
 ```ruby
 class Users::Update
@@ -129,29 +144,38 @@ Users::Update.call(user: User.first, attributes: { name: "Javier" })
 The `name` attribute are calculated using the custom proc from `event_name` config option. You can change it with
 
 ```ruby
-event name: 'custom:name', resource: :user
+event name: "custom:name", resource: :user
 ```
 
 #### Properties passed to event model
 
-Properties that should be passed to event model are defined in `event_properties` config option and by
-default are `actor` `resource`, `target` and `context`.
+For each property passed as payload of `event` class method, it will try to:
 
-1. Append base properties. For each property defined in `event_properties` config option, it will try to:
-   1. If defined a instance variable `@event_<property>`, uses the instance variable value to get the value of property.
-   2. If respond_to method called `event_<property>`, method is used to get the value of property.
-   3. If defined a instance variable `@<property>`, uses the instance variable value to get the value of property.
-   4. If respond_to method called `<property>`, method is used to get the value of property.
-   5. In other case, the property is not appended.
-2. Append properties defined in `event` class method. Overwrites previous values. For each property, will try to:
-   1. If is a block, it is called to get the value of property.
-   2. If is a symbol:
-      1. If defined a instance variable `@<property>`, uses the instance variable value to get the value of property.
-      2. If respond_to `<property>`, method is used to get the value of property.
-   3. In other case, uses the raw value.
+1. If is a block, it is called to get the value of property.
+2. If is a symbol, a method is used to get the value of property:
+3. In other case, uses the raw value.
+
+#### Config options
+
+```ruby
+# config/initializers/haku.rb
+
+Haku.configure do |config|
+  config.event_model = "EventLog"
+end
+```
+
+| Config                    | Description                                           | Default value                                          |
+|:--------------------------|:------------------------------------------------------|:-------------------------------------------------------|
+| `event_model`             | Name of the model used for create events              | `Event`                                                |
+| `event_property_for_name` | Property used for name in event model                 | `:name`                                                |
+| `event_name`              | String or Proc to determine the event name            | Custom Proc. Returns `user:create` for `Users::Create` |
 
 
 ### Haku::Resourceable
+
+This module include helpers to works with *ActiveRecord* compatible model resources, invoking `success!` or `failure!`
+based in the result of the performed operation.
 
 ```ruby
 class Users::Update
@@ -172,6 +196,52 @@ class Users::Update
   end
 end
 ```
+
+#### create_resource
+
+Call to `create` or `<singleton>_create` method of the `parent` object passing the `attributes` and storing
+the result object in the `ivar` instance variable. Invoke `success!` if the model is persisted or `failure!` in other
+case.
+
+| parameter    | type     | description                                                      |
+|--------------|----------|------------------------------------------------------------------|
+| `parent`     | `Object` | Parent object where new resource will be created                 |
+| `attributes` | `Hash`   | Attributes for create                                            |
+| `ivar`       | `Symbol` | Name of the instance variable used to access to the new resource |
+| `options`    | `Hash`   | Options hash                                                     |
+
+##### options
+
+| parameter   | type     | description                                                          |
+|-------------|----------|----------------------------------------------------------------------|
+| `singleton` | `Symbol` | If the resource should be created using `<singleton>_create` suffix. |
+
+#### update_resource
+
+Call to `update` method of the `resource` object passing `attributes`to it. Invoke `success!` if the model is updated or
+`failure!` in other case.
+
+| parameter    | type     | description            |
+|--------------|----------|------------------------|
+| `resource`   | `Object` | Resource to be updated |
+| `attributes` | `Hash`   | Attributes to update   |
+
+#### destroy_resource
+
+Call to `destroy` method of the `resource`. Invoke `success!` if the model is destroyed or `failure!` in other case.
+
+| parameter    | type     | description              |
+|--------------|----------|--------------------------|
+| `resource`   | `Object` | Resource to be destroyed |
+
+#### persist_resource
+
+| parameter      | type     | description                                 |
+|----------------|----------|---------------------------------------------|
+| `resource`     | `Object` | Resource to be destroyed                    |
+| `save_options` | `Hash`   | Options passed to `save` method of resource |
+
+For more info please view the [source code](lib/haku/resourceable.rb) of the module.
 
 
 ### Haku::Controller
@@ -217,81 +287,6 @@ end
 class Users::Update < ApplicationAction
 end
 ```
-
-
-## Configure
-
-### Example
-
-```ruby
-# config/initializers/haku.rb
-
-Haku.configure do |config|
-  config.event_model = "EventLog"
-end
-```
-
-### Allowed options
-
-| Config                    | Description                                           | Default value                                           |
-|:--------------------------|:------------------------------------------------------|:--------------------------------------------------------|
-| `event_model`             | Name of the model used for create events              | `Event`                                                 |
-| `event_properties`        | List of attributes passed from service to event model | `%i[actor resource target context]`                     |
-| `event_property_for_name` | Property used for name in event model                 | `:name`                                                 |
-| `event_name`              | String or Proc to determine the event name            | Custom Proc. Example: `user:create` for `Users::Create` |
-| `job_queue`               | String or Symbol with queue name                      | `default`                                               |
-
-
-## Resourceable
-
-This module include helpers to works with *ActiveRecord* compatible model resources, invoking `success!` or `failure!`
-based in the result of the performed operation.
-
-### create_resource
-
-Call to `create` or `<singleton>_create` method of the `parent` object passing the `attributes` and storing
-the result object in the `ivar` instance variable. Invoke `success!` if the model is persisted or `failure!` in other
-case.
-
-| parameter    | type     | description                                                      |
-|--------------|----------|------------------------------------------------------------------|
-| `parent`     | `Object` | Parent object where new resource will be created                 |
-| `attributes` | `Hash`   | Attributes for create                                            |
-| `ivar`       | `Symbol` | Name of the instance variable used to access to the new resource |
-| `options`    | `Hash`   | Options hash                                                     |
-
-#### options
-
-| parameter   | type     | description                                                          |
-|-------------|----------|----------------------------------------------------------------------|
-| `singleton` | `Symbol` | If the resource should be created using `<singleton>_create` suffix. |
-
-### update_resource
-
-Call to `update` method of the `resource` object passing `attributes`to it. Invoke `success!` if the model is updated or
-`failure!` in other case.
-
-| parameter    | type     | description            |
-|--------------|----------|------------------------|
-| `resource`   | `Object` | Resource to be updated |
-| `attributes` | `Hash`   | Attributes to update   |
-
-### destroy_resource
-
-Call to `destroy` method of the `resource`. Invoke `success!` if the model is destroyed or `failure!` in other case.
-
-| parameter    | type     | description              |
-|--------------|----------|--------------------------|
-| `resource`   | `Object` | Resource to be destroyed |
-
-### persist_resource
-
-| parameter      | type     | description                                 |
-|----------------|----------|---------------------------------------------|
-| `resource`     | `Object` | Resource to be destroyed                    |
-| `save_options` | `Hash`   | Options passed to `save` method of resource |
-
-For more info please view the [source code](lib/haku/resourceable.rb) of the module.
 
 
 ## Development
