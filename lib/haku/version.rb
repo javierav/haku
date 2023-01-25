@@ -3,7 +3,7 @@
 module Haku
   module VERSION
     MAJOR = 1
-    MINOR = 4
+    MINOR = 5
     TINY  = 0
     PRE   = nil
 
