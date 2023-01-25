@@ -11,7 +11,6 @@ require_relative "haku/version"
 
 module Haku
   mattr_accessor :event_model, default: "Event"
-  mattr_accessor :event_properties, default: %i[actor resource target context]
   mattr_accessor :event_property_for_name, default: :name
   mattr_accessor :event_name, default: proc {
     chain = self.class.name.underscore.split("/")
