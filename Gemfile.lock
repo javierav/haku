@@ -24,7 +24,7 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.6.3)
     method_source (1.0.0)
-    minitest (5.17.0)
+    minitest (5.18.0)
     parallel (1.22.1)
     parser (3.2.1.0)
       ast (~> 2.4.1)
@@ -63,7 +63,7 @@ PLATFORMS
 DEPENDENCIES
   activejob (>= 6.1, < 8.0)
   haku!
-  minitest (~> 5.0)
+  minitest (~> 5.18)
   pry (~> 0.14)
   rake (~> 13.0)
   rubocop (~> 1.48)
