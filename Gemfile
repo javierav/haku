@@ -5,7 +5,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "activejob", ">= 6.1", "< 8.0"
-gem "minitest", "~> 5.18"
+gem "minitest", "~> 5.19"
 gem "pry", "~> 0.14"
 gem "rake", "~> 13.0"
 gem "rubocop", "~> 1.54"
